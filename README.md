@@ -1,4 +1,4 @@
-# BruteCMS v1.0.1
+# BruteCMS v1.0.3
 ## Author: github.com/thelinuxchoice
 ## IG: instagram.com/thelinuxchoice
 ### Don't copy this code without give me the credits, nerd! Read GNU License. 
